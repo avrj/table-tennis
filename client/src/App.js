@@ -175,6 +175,7 @@ const App = () => {
         <div style={{ width: "80px", marginRight: "10px" }}>
           {playerServe && (
             <img
+              alt={""}
               style={{ width: "100%" }}
               src={
                 "https://upload.wikimedia.org/wikipedia/commons/8/8d/Table_tennis.svg"
@@ -196,6 +197,7 @@ const App = () => {
         <div style={{ width: "80px", marginLeft: "10px" }}>
           {!playerServe && (
             <img
+              alt={""}
               style={{ width: "100%" }}
               src={
                 "https://upload.wikimedia.org/wikipedia/commons/8/8d/Table_tennis.svg"
