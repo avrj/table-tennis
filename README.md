@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/avrj/table-tennis.svg?branch=master)](https://travis-ci.org/avrj/table-tennis)
+
 Drivers for ESP-32: https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
 
 Libraries used in ESP 32:
