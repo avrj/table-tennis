@@ -111,6 +111,7 @@ const App = () => {
 
     client.on("connect", onConnect);
     client.on("error", onError);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -126,6 +127,7 @@ const App = () => {
 
       setPlayerServe(serve => !serve);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pointsHome, pointsOpponent]);
 
   const speakStatus = () => {
