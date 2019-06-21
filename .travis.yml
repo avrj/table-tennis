@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - "node"
+cache:
+  directories:
+    - "client/node_modules"
+before_script: cd client
+script: npm ci && npm run build
+deploy:
+  - provider: script
+    script: npx now build --token $NOW_TOKEN
+    skip_cleanup: true
+    on:
+      master: true
