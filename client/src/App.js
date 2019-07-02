@@ -53,7 +53,7 @@ const mqttOptions = {
 };
 
 const App = () => {
-  const [previousErotus, setPreviousErotus] = useState(0);
+  const [previousDifference, setPreviousDifference] = useState(0);
   const [isMuted, setMuted] = useState(false);
   const [speakServesEnabled, setSpeakServesEnabled] = useState(true);
   const [servesPerPlayer, setServesPerPlayer] = useState(5);
@@ -131,14 +131,14 @@ const App = () => {
   }, [pointsHome, pointsOpponent]);
 
   const speakStatus = () => {
-    setPreviousErotus(Math.abs(pointsHome - pointsOpponent));
+    setPreviousDifference(Math.abs(pointsHome - pointsOpponent));
     if (pointsHome === pointsOpponent) {
       speak(`tasapeli ${pointsHome} - ${pointsOpponent}`);
-    } else if (pointsHome > pointsOpponent && previousErotus === 0) {
+    } else if (pointsHome > pointsOpponent && previousDifference === 0) {
       speak(
         `${homeName} siirtyi johtoon. tilanne ${pointsHome} - ${pointsOpponent}`
       );
-    } else if (pointsOpponent > pointsHome && previousErotus === 0) {
+    } else if (pointsOpponent > pointsHome && previousDifference === 0) {
       speak(
         `${opponentName} siirtyi johtoon. tilanne ${pointsHome} - ${pointsOpponent}`
       );
