@@ -123,7 +123,7 @@ const App = () => {
 
     if (serveHasChanged) {
       if (speakServesEnabled)
-        speak(`Lyöntivuorossa ${!playerServe ? homeName : opponentName}`);
+        speak(`Syöttövuorossa ${!playerServe ? homeName : opponentName}`);
 
       setPlayerServe(serve => !serve);
     }
