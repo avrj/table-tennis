@@ -59,10 +59,9 @@ const App = () => {
   const [servesPerPlayer, setServesPerPlayer] = useState(5);
   const [isConnected, setConnected] = useState(false);
   const [playerServe, setPlayerServe] = useState(true);
-  const [pointsHome, setHome] = useState(0);
-  const [pointsOpponent, setOpponent] = useState(0);
   const [opponentName, setOpponentName] = useState("pelaaja 2");
   const [homeName, setHomeName] = useState("pelaaja 1");
+  const [points, setPoints] = useState({ home: 0, opponent: 0 });
 
   const speak = text => {
     if (isMuted) {
@@ -124,8 +123,8 @@ const App = () => {
     speakStatus();
 
     const serveHasChanged =
-      pointsHome + pointsOpponent > 0 &&
-      (pointsHome + pointsOpponent) % servesPerPlayer === 0;
+      points.home + points.opponent > 0 &&
+      (points.home + points.opponent) % servesPerPlayer === 0;
 
     if (serveHasChanged) {
       if (speakServesEnabled)
@@ -134,51 +133,58 @@ const App = () => {
       setPlayerServe(serve => !serve);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pointsHome, pointsOpponent]);
+  }, [points]);
 
   const speakStatus = () => {
-    setPreviousDifference(Math.abs(pointsHome - pointsOpponent));
-    if (pointsHome === pointsOpponent) {
-      speak(`tasapeli ${pointsHome} - ${pointsOpponent}`);
-    } else if (pointsHome > pointsOpponent && previousDifference === 0) {
+    setPreviousDifference(Math.abs(points.home - points.opponent));
+
+    if (points.home === 0 && points.opponent === 0) {
+      return;
+    }
+
+    if (points.home === points.opponent) {
+      speak(`tasapeli ${points.home} - ${points.opponent}`);
+    } else if (points.home > points.opponent && previousDifference === 0) {
+      speak(`${homeName} siirtyi johtoon ${points.home} - ${points.opponent}`);
+    } else if (points.opponent > points.home && previousDifference === 0) {
       speak(
-        `${homeName} siirtyi johtoon. tilanne ${pointsHome} - ${pointsOpponent}`
-      );
-    } else if (pointsOpponent > pointsHome && previousDifference === 0) {
-      speak(
-        `${opponentName} siirtyi johtoon. tilanne ${pointsHome} - ${pointsOpponent}`
+        `${opponentName} siirtyi johtoon ${points.home} - ${points.opponent}`
       );
     } else {
-      speak(`tilanne ${pointsHome} - ${pointsOpponent}`);
+      speak(`tilanne ${points.home} - ${points.opponent}`);
     }
   };
 
   const addHomePoint = () => {
-    setHome(points => points + 1);
+    setPoints(points => ({ home: points.home + 1, opponent: points.opponent }));
   };
 
   const addOpponentPoint = () => {
-    setOpponent(points => points + 1);
+    setPoints(points => ({ home: points.home, opponent: points.opponent + 1 }));
   };
 
   const undoHomePoint = () => {
-    if(pointsHome > 0) {
-      setHome(points => points - 1);
+    if (points.home > 0) {
+      setPoints(points => ({
+        home: points.home - 1,
+        opponent: points.opponent
+      }));
     }
   };
 
   const undoOpponentPoint = () => {
-    if(pointsOpponent > 0) {
-      setOpponent(points => points - 1);
+    if (points.opponent > 0) {
+      setPoints(points => ({
+        home: points.home,
+        opponent: points.opponent - 1
+      }));
     }
   };
 
   const startNewGame = () => {
-    setHome(0);
-    setOpponent(0);
+    setPoints({ home: 0, opponent: 0 });
 
     speak("Aloitetaan uusi peli");
-    speak("Arvotaan pelin aloittaja");
 
     const whichOneStartsTheGame = Boolean(getRandomInt(2));
 
@@ -206,13 +212,13 @@ const App = () => {
         <div>
           {homeName}
           <br />
-          <strong style={{ fontSize: "40pt" }}>{pointsHome}</strong>
+          <strong style={{ fontSize: "40pt" }}>{points.home}</strong>
         </div>{" "}
         <div className={"vs"}>VS</div>{" "}
         <div>
           {opponentName}
           <br />
-          <strong style={{ fontSize: "40pt" }}>{pointsOpponent}</strong>
+          <strong style={{ fontSize: "40pt" }}>{points.opponent}</strong>
         </div>
         <div style={{ width: "80px", marginLeft: "10px" }}>
           {!playerServe && (
