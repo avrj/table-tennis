@@ -80,6 +80,12 @@ const App = () => {
       case "home":
         addHomePoint();
         break;
+      case "opponent_undo":
+        undoOpponentPoint();
+        break;
+      case "home_undo":
+        undoHomePoint();
+        break;
       case "reset":
         startNewGame();
         break;
@@ -153,6 +159,18 @@ const App = () => {
 
   const addOpponentPoint = () => {
     setOpponent(points => points + 1);
+  };
+
+  const undoHomePoint = () => {
+    if(pointsHome > 0) {
+      setHome(points => points - 1);
+    }
+  };
+
+  const undoOpponentPoint = () => {
+    if(pointsOpponent > 0) {
+      setOpponent(points => points - 1);
+    }
   };
 
   const startNewGame = () => {
