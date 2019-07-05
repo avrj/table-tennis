@@ -72,6 +72,8 @@ const App = () => {
   };
 
   const onMessage = async (topic, message) => {
+    console.log(`Received message '${message.toString()}' on topic '${topic}'`)
+
     switch (message.toString()) {
       case "opponent":
         addOpponentPoint();
