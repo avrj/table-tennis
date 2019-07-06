@@ -72,7 +72,7 @@ const App = () => {
   };
 
   const onMessage = async (topic, message) => {
-    console.log(`Received message '${message.toString()}' on topic '${topic}'`)
+    console.log(`Received message '${message.toString()}' on topic '${topic}'`);
 
     switch (message.toString()) {
       case "opponent":
@@ -166,21 +166,29 @@ const App = () => {
   };
 
   const undoHomePoint = () => {
-    if (points.home > 0) {
-      setPoints(points => ({
+    setPoints(points => {
+      if (points.home === 0) {
+        return points;
+      }
+
+      return {
         home: points.home - 1,
         opponent: points.opponent
-      }));
-    }
+      };
+    });
   };
 
   const undoOpponentPoint = () => {
-    if (points.opponent > 0) {
-      setPoints(points => ({
+    setPoints(points => {
+      if (points.opponent === 0) {
+        return points;
+      }
+
+      return {
         home: points.home,
         opponent: points.opponent - 1
-      }));
-    }
+      };
+    });
   };
 
   const startNewGame = () => {
