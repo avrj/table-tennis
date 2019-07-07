@@ -215,6 +215,12 @@ const App = () => {
   const startNewGame = () => {
     setPoints({ home: 0, opponent: 0 });
 
+    if (gameMode === gameModes.wunderpong) {
+      setServesPerPlayer(5);
+    } else if (gameMode === gameModes.official) {
+      setServesPerPlayer(2);
+    }
+
     speak("Aloitetaan uusi peli");
 
     const whichOneStartsTheGame = Boolean(getRandomInt(2));
