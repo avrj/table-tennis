@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import * as mqtt from "async-mqtt";
 
+const voiceLanguage = "fi-FI";
+
 const refreshTimer = () => {
   if (new Date().getHours() === 5) {
     window.location.reload();
@@ -29,9 +31,14 @@ const getRandomInt = max => {
 };
 
 const speakText = text => {
+  if(voices.length === 0) {
+    console.log("Still loading voices list...")
+    return
+  }
+
   const utterThis = new SpeechSynthesisUtterance(text);
 
-  utterThis.voice = voices[34]; // Finnish
+  utterThis.voice = voices.find(voice => voice.lang === voiceLanguage);
   utterThis.pitch = 1;
   utterThis.rate = 1;
 
