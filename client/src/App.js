@@ -4,6 +4,11 @@ import * as mqtt from "async-mqtt";
 
 const voiceLanguage = "fi-FI";
 
+const gameModes = Object.freeze({
+  wunderpong: "wunderpong",
+  official: "official"
+});
+
 const refreshTimer = () => {
   if (new Date().getHours() === 5) {
     window.location.reload();
@@ -31,9 +36,9 @@ const getRandomInt = max => {
 };
 
 const speakText = text => {
-  if(voices.length === 0) {
-    console.log("Still loading voices list...")
-    return
+  if (voices.length === 0) {
+    console.log("Still loading voices list...");
+    return;
   }
 
   const utterThis = new SpeechSynthesisUtterance(text);
@@ -60,6 +65,7 @@ const mqttOptions = {
 };
 
 const App = () => {
+  const [gameMode, setGameMode] = useState(gameModes.wunderpong);
   const [previousDifference, setPreviousDifference] = useState(0);
   const [isMuted, setMuted] = useState(false);
   const [speakServesEnabled, setSpeakServesEnabled] = useState(true);
@@ -129,6 +135,14 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    if (
+      gameMode === gameModes.official &&
+      points.home >= 10 &&
+      points.opponent >= 10
+    ) {
+      setServesPerPlayer(1);
+    }
+
     speakStatus();
 
     const serveHasChanged =
@@ -212,6 +226,8 @@ const App = () => {
     setPlayerServe(whichOneStartsTheGame);
   };
 
+  const gameHasStarted = points.home > 0 || points.opponent > 0;
+
   return isConnected ? (
     <div className="App">
       <h1 className={"header"}>
@@ -268,12 +284,31 @@ const App = () => {
       <br />
       Settings:
       <br />
-      Serves per player:{" "}
+      Game mode:{" "}
       <input
-        type={"text"}
-        onChange={e => setServesPerPlayer(e.target.value)}
-        value={servesPerPlayer}
-      />
+        disabled={gameHasStarted}
+        type="radio"
+        name="game_mode"
+        value={gameModes.wunderpong}
+        onChange={e => {
+          setServesPerPlayer(5);
+          setGameMode(e.currentTarget.value);
+        }}
+        checked={gameMode === gameModes.wunderpong}
+      />{" "}
+      Wunderpong (5 serves){" "}
+      <input
+        type="radio"
+        name="game_mode"
+        value={gameModes.official}
+        checked={gameMode === gameModes.official}
+        onChange={e => {
+          setServesPerPlayer(2);
+          setGameMode(e.currentTarget.value);
+        }}
+        disabled={gameHasStarted}
+      />{" "}
+      Official (2 serves, after 10-10 one serve)
       <br />
       Speak serves:
       <input
