@@ -3,7 +3,7 @@
 # Keeping count of table tennis points
 **The idea:**
 
-Keep count of table tennis points with buttons connected to a microcontroller, which passes the points to a MQTT broker via WiFi.
+Keep count of table tennis points with wireless 433 Mhz buttons connected to a microcontroller, which passes the points to a MQTT broker via WiFi.
 Show the points in real time in a browser window.
 
 **Feature ideas:**
@@ -14,8 +14,6 @@ Show the points in real time in a browser window.
 * integrating to the original [wunderpong](https://github.com/wunderdogsw/wunderpong) app
     * starting game with the face recognition webcam (to get the names of the players)
     * saving games to the score board
-* nice-to-have:
-    * wireless buttons (for example 433 mhz)
 
 ## MQTT broker for local development
 To start the MQTT broker for local development, run: 
@@ -33,12 +31,6 @@ https://www.aliexpress.com/item/ESP32-Development-Board-WiFi-Bluetooth-Ultra-Low
 **Drivers for ESP-32:**
 
 https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
-
-**Libraries used:**
-
-https://github.com/knolleary/pubsubclient
-
-https://github.com/evert-arias/EasyButton
 
 **Pinout:**
 
