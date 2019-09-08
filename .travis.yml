@@ -1,14 +1,29 @@
-language: node_js
-node_js:
-  - "node"
-cache:
-  directories:
-    - "client/node_modules"
-before_script: cd client
-script: npm ci && npm run build
-deploy:
-  - provider: script
-    script: npx now build --token $NOW_TOKEN
-    skip_cleanup: true
-    on:
-      master: true
+matrix:
+  include:
+    - language: node_js
+      node_js:
+        - "node"
+      cache:
+        directories:
+          - "client/node_modules"
+      before_script: cd client
+      script: npm ci && npm run build
+      deploy:
+        - provider: script
+          script: npx now build --token $NOW_TOKEN
+          skip_cleanup: true
+          on:
+            master: true
+
+    - language: python
+      python:
+        - "2.7"
+      sudo: false
+      cache:
+      directories:
+        - "~/.platformio"
+      install:
+        - pip install -U platformio
+        - platformio update
+      script:
+        - platformio run
