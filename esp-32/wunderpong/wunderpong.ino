@@ -1,11 +1,10 @@
+
 #include <WiFi.h>
 #include <PubSubClient.h>
-#include <EasyButton.h>
 
-#define HOME_BUTTON_PIN 5
-#define HOME_RESET_BUTTON_PIN 23
-#define OPPONENT_BUTTON_PIN 18
-#define OPPONENT_RESET_BUTTON_PIN 19
+#include <RCSwitch.h>
+
+RCSwitch mySwitch = RCSwitch();
 
 #define HOME_LED 16
 #define OPPONENT_LED 17
@@ -17,16 +16,16 @@ const int mqttPort = 10532;
 const char* mqttUser = "";
 const char* mqttPassword = "";
 
+
+unsigned long lastDebounceTime = 0;
+unsigned long debounceDelay = 1000;
+
 unsigned long check_wifi = 30000;
- 
+
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-EasyButton home_button(HOME_BUTTON_PIN);
-EasyButton home_reset_button(HOME_RESET_BUTTON_PIN);
-EasyButton opponent_button(OPPONENT_BUTTON_PIN);
-EasyButton opponent_reset_button(OPPONENT_RESET_BUTTON_PIN);
-
+// Callback function to be called when the button is pressed.
 void onHomePressed() {
   Serial.println("Home button has been pressed!");
   client.publish("esp/test", "home");
@@ -57,23 +56,11 @@ void onPressedForDuration() {
 void setup() {
   pinMode(HOME_LED, OUTPUT);
   pinMode(OPPONENT_LED, OUTPUT);
-  // Initialize Serial for debuging purposes.
-  Serial.begin(115200);
+  // Initialize Serial for debugging purposes.
+  Serial.begin(300);
   
   WiFi.begin(ssid, password);
 
-  home_button.begin();
-  home_reset_button.begin();
-  opponent_button.begin();
-  opponent_reset_button.begin();
-
-  home_button.onPressed(onHomePressed);
-  home_reset_button.onPressed(onUndoHomePressed);
-  opponent_button.onPressed(onOpponentPressed);
-  home_reset_button.onPressedFor(2000, onPressedForDuration);
-  opponent_reset_button.onPressed(onUndoOpponentPressed);
-  opponent_reset_button .onPressedFor(2000, onPressedForDuration);
- 
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
     Serial.println("Connecting to WiFi..");
@@ -89,6 +76,7 @@ void setup() {
   client.setServer(mqttServer, mqttPort);
  
   connectToMQTT();
+  mySwitch.enableReceive(13);
 }
 
 void connectToMQTT() {
@@ -126,11 +114,26 @@ void loop() {
    if (!client.connected()) {
     connectToMQTT();
   }
+
+  if (mySwitch.available()) { 
+    int value = mySwitch.getReceivedValue();
+
+
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    
+    if(value == 11469281) {
+      onHomePressed();
+    } else if(value == 1885089) {
+      onOpponentPressed();
+    }
+    
+    lastDebounceTime = millis();
+  } else {
+    Serial.print("debounce");
+  }
+
+    mySwitch.resetAvailable();
+  }
   
-  // Continuously read the status of the button. 
-  home_button.read();
-  home_reset_button.read();
-  opponent_button.read();
-  opponent_reset_button.read();
   client.loop();
 }
