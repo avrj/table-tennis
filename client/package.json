@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "async-mqtt": "2.4.2",
+    "async-mqtt": "2.6.3",
     "mqtt": "3.0.0",
     "react": "16.11.0",
     "react-compound-timer": "1.1.15",
